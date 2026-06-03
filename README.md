@@ -1,8 +1,6 @@
-**ImunifyAV Free - Manual Quarantine & Restore Manager**:
+**ImunifyAV-Free---Manual-Quarantine-Restore-Manager**
 
----
-
-````markdown
+````markdown id="final_readme_01"
 # ImunifyAV Free - Manual Quarantine & Restore Manager
 
 A high-performance, lightweight bash utility layer designed for standalone or cPanel-managed servers running ImunifyAV (Free Edition).
@@ -11,113 +9,151 @@ Since the free tier of ImunifyAV scans and detects malware but lacks an automate
 
 ---
 
+## 🚀 Quick One-Click Installation
+
+```bash
+wget -O install.sh https://raw.githubusercontent.com/bipulbd08/ImunifyAV-Free---Manual-Quarantine-Restore-Manager/main/install.sh && chmod +x install.sh && ./install.sh
+````
+
+---
+
 ## ⚙️ How It Works
 
-The toolkit uses the native Imunify CLI and basic Linux file streams to safely isolate threats without needing a premium license:
+The toolkit integrates with ImunifyAV and Linux filesystem operations to safely handle malware without requiring a premium license:
 
-- **Threat Detection & Retrieval:**  
-  When executed, the tool queries the ImunifyAV database via its JSON API to pull all active, unresolved malicious file paths for a specific user or the entire server.
+* **Threat Detection & Retrieval:**
+  Queries ImunifyAV system to collect all active malicious file paths for a user or full server.
 
-- **Secure Isolation (Quarantine):**  
-  The files are moved out of the user's web directory into `/root/imunify_quarantine/[username]/`.  
-  To prevent collisions, each file is renamed using an MD5 hash of its original absolute path while preserving its original extension.
+* **Secure Isolation (Quarantine):**
+  Moves infected files from web directories into `/root/imunify_quarantine/[username]/` and renames them using an MD5 hash of the original full path while preserving file extensions.
 
-- **Execution Lockdown:**  
-  Once inside the vault, file permissions are stripped (`chmod 000`), ensuring malicious code cannot be executed or accessed via the web.
+* **Execution Lockdown:**
+  Applies strict permissions (`chmod 000`) to prevent execution, access, or web exposure.
 
-- **Dashboard Synchronization:**  
-  Processed threats are bulk-removed from the Imunify UI dashboard using API calls, clearing detections quickly.
+* **Dashboard Synchronization:**
+  Bulk-removes processed threats from the Imunify UI dashboard to keep it clean and synced.
 
-- **Audit Logging:**  
-  Every action is logged in a centralized history file, enabling traceability and safe restoration with correct permissions and ownership.
+* **Audit Logging:**
+  Every action is logged inside `quarantine_history.log` for tracking, auditing, and safe restoration.
 
 ---
 
 ## 🚀 Manual Installation
 
-### Step 1: Deploy the Quarantine & Restore Command Engine
-
-Create the core binary file:
+### Step 1: Deploy Command Engine
 
 ```bash
 nano /usr/local/bin/imunify-q
-````
-
-Paste the contents of `imunify-q`, then save:
-
 ```
+
+Paste script content, then save:
+
+```bash
 Ctrl + O → Enter → Ctrl + X
 ```
 
-Make it executable:
+Make executable:
 
-```bash
+```bash id="mk7q1p"
 chmod +x /usr/local/bin/imunify-q
 ```
 
 ---
 
-### Step 2: Deploy the Automated Retention Cleanup Script
+### Step 2: Deploy Cleanup Script
 
-Create the cleanup script:
-
-```bash
+```bash id="2h9xsw"
 nano /usr/local/bin/imunify_purge_cron.sh
 ```
 
-Paste the script contents, then save.
+Make executable:
 
-Make it executable:
-
-```bash
+```bash id="q9v3dn"
 chmod +x /usr/local/bin/imunify_purge_cron.sh
 ```
 
 ---
 
-### Step 3: Add Cron Job for Auto Cleanup
+### Step 3: Add Cron Job
 
-Open cron editor:
-
-```bash
+```bash id="c8lm2z"
 crontab -e
 ```
 
-Add this line at the bottom:
+Add:
 
-```bash
+```bash id="w1nq0x"
 0 0 * * * /usr/local/bin/imunify_purge_cron.sh >/dev/null 2>&1
 ```
 
-Save and exit.
-
 ---
 
-## 🔍 Verification Checklist
+## 🔍 Verification
 
-Run the tool:
-
-```bash
+```bash id="v6k2mp"
 imunify-q
 ```
 
 ---
 
-## 🚀 Quick One-Click Installation
+## 💻 How To Use It
 
-Run this command as root:
+### 1. Quarantining Active Threats
 
-```bash
-wget -O install.sh https://raw.githubusercontent.com/bipulbd08/ImunifyAV-Free---Manual-Quarantine-Restore-Manager/main/install.sh && chmod +x install.sh && ./install.sh
+* For a specific cPanel account:
+
+```bash id="u2p9lz"
+imunify-q --user [username]
+```
+
+* For entire server:
+
+```bash id="x8q1dv"
+imunify-q --all
 ```
 
 ---
 
+### 2. Restoring Files (False Positives)
+
+```bash id="r5n1cw"
+imunify-q --restore [username]
+```
+
+Restores:
+
+* Original file paths
+* Permissions (`644`)
+* Correct ownership
+
+---
+
+### 3. Checking Logs
+
+```bash id="t3k9ab"
+cat /root/imunify_quarantine/quarantine_history.log
 ```
 
 ---
 
-If you want, I can also:
-- improve it to **professional open-source GitHub standard (badges, structure, screenshots)**
-- or rewrite it to look like a **commercial SaaS security tool page**
+### 4. Dry Run Mode
+
+```bash id="y7m2ld"
+imunify-q --scan
 ```
+
+* No changes made
+* Only shows detected threats
+
+---
+
+## 📌 Notes
+
+* Designed for ImunifyAV Free limitation workaround
+* Safe for cPanel & standalone Linux servers
+* Keeps full audit trail for all actions
+
+```
+
+---
+
