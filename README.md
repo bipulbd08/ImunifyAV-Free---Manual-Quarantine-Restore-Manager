@@ -17,6 +17,56 @@ The toolkit uses the native Imunify CLI and basic Linux file streams to safely i
 5. **Audit Logging:** Every file action is written to a centralized history log, allowing the interactive restore engine to map files back to their precise origins, fix permissions (`644`), and restore proper cPanel user/group ownership.
 
 ---
+## 🚀 Manual Installation
+Step 1: Deploy the Quarantine & Restore Command Engine
+
+Create the core binary container file:
+Bash
+
+nano /usr/local/bin/imunify-q
+
+Paste the exact contents of the imunify-q file from this repository into the window. Save and exit (Ctrl+O, Enter, Ctrl+X).
+
+Make the command binary globally executable by the system:
+Bash
+
+chmod +x /usr/local/bin/imunify-q
+
+Step 2: Deploy the Automated Retention Cleanup Script
+
+Create the background lifecycle rotation script file:
+Bash
+
+nano /usr/local/bin/imunify_purge_cron.sh
+
+Paste the exact contents of the imunify_purge_cron.sh file from this repository into the window. Save and exit (Ctrl+O, Enter, Ctrl+X).
+
+Grant execution permissions to the rotation utility:
+Bash
+
+chmod +x /usr/local/bin/imunify_purge_cron.sh
+
+Step 3: Hook the Retention Utility Into System Automation
+
+To ensure older malicious payloads are systematically purged from your root filesystem, manually hook the script into the root user's system crontab table.
+
+Open the interactive cron table configuration window:
+Bash
+
+crontab -e
+
+Navigate to the very bottom line of the file and insert the following automation string:
+Code snippet
+
+0 0 * * * /usr/local/bin/imunify_purge_cron.sh >/dev/null 2>&1
+
+Save and close the file. The terminal will confirm with crontab: installing new crontab.
+🔍 Verification Checklist
+
+Verify that your manual installation was successful by running the command directly:
+Bash
+
+imunify-q
 
 ## 🚀 Quick One-Click Installation
 
